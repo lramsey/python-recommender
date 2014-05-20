@@ -1,8 +1,10 @@
-import similarity
-import numpy as np
+import customers as c
+import numpy     as np
 
-users = similarity.users
-matrix = [[]]
+customers    = c.customers
+matrix       = [[]]
+clusterMap   = {}
+centroidList = {}
 
 def __init__(mat):
     global matrix
@@ -31,9 +33,9 @@ def findCenter(vector, centroids, num):
     center = -1
     for i in range(0, num):
         data = (vector-centroids[i])**2.0
-        userDist = np.sum(data)**(1.0/2.0)
-        if userDist < minDist:
-            minDist = userDist
+        customerDist = np.sum(data)**(1.0/2.0)
+        if customerDist < minDist:
+            minDist = customerDist
             center = i
     return center
 
@@ -47,9 +49,9 @@ def clusterizer(centroids, num):
         center = findCenter(matrix[i], centroids, num)
         centers.append(center)
 
-    for i in range(0, len(users)):
+    for i in range(0, len(customers)):
         index = centers[i]
-        clusters[index].append(users[i])
+        clusters[index].append(customers[i])
 
     return np.array(clusters)
 
@@ -62,6 +64,8 @@ def kMeans(num, end=5, centroids=np.array([0]), count=1):
     clusters = clusterizer(centroids, num)
     again = False
     if count == end:
+        print 'end'
+        cleanupCluster(clusters, centroids)
         results = []
         for i in range(0,len(clusters)):
             if len(clusters[i]) != 0:
@@ -75,4 +79,13 @@ def kMeans(num, end=5, centroids=np.array([0]), count=1):
                 again = True
     if again:
         clusters = kMeans(num, end, centroids, count+1)
+    else:
+        cleanupCluster(clusters, centroids)
     return clusters
+
+def cleanupCluster(clust, cent):
+    global centroidList
+    centroidList = cent
+    for i in range(0, len(clust)):
+        for j in range(0,len(clust[i])):
+            clusterMap[clust[i][j].name] = i
