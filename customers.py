@@ -1,6 +1,6 @@
 import products as p
-import numpy    as np
 import util     as u
+import numpy    as np
 import math
 
 customers = []
@@ -92,8 +92,13 @@ def nearestNeighbors(customer, num, customerMatrix):
 
 def matrixBuilder():
     matr = []
+    row = np.zeros(len(customers[0].purchasesArr))
     for i in range(0, len(customers)):
+        for j in range(0, len(customers[i].purchasesArr)):
+            if customers[i].purchasesArr[j] > row[j]:
+                row[j] = customers[i].purchasesArr[j]
         matr.append(customers[i].purchasesArr)
     global matrix
     matrix = np.array(matr)
-    return
+    global maxRow
+    maxRow = row
