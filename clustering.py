@@ -53,11 +53,9 @@ def customerPoint(populus, i, j):
     return populus[j].purchasesArr[i]
 
 def productPoint(populus, i, j):
-    if matrix[itemsMap[populus[j]]][i] > 0:
-        return 1
-    else:
-        return 0
-
+    imap = itemsMap[populus[j]]
+    mat = matrix[imap]
+    return mat[i]
 
 def findCenter(vector, centroids, num):
     minDist = len(matrix[0])
@@ -73,6 +71,7 @@ def findCenter(vector, centroids, num):
 def clusterizer(centroids, num):
     centers = []
     clusters = []
+
     for i in range(0,num):
         clusters.append([])
 
@@ -111,7 +110,6 @@ def kMeans(num, end=5, centroids=np.array([0]), count=1):
     return clusters
 
 def earlyEndCluster(clusters, centroids):
-    print 'end'
     results = []
     for i in range(0,len(clusters)):
         if len(clusters[i]) != 0:

@@ -31,7 +31,9 @@ def silhouette(cluster):
         c = distFromCentroid(cluster, cl.centroidList[i])
         if c < a:
             b = a
-            a = c 
+            a = c
         elif c < b:
             b = c
+        if b == 0:
+            print 'err'
     return (b-a)/max(a,b)
