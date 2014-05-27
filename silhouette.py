@@ -35,5 +35,5 @@ def silhouette(cluster):
         elif c < b:
             b = c
         if b == 0:
-            print 'err'
+            return 0
     return (b-a)/max(a,b)

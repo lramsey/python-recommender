@@ -25,16 +25,20 @@ def dataBuilder(num):
 def subMatrices(clusters):
     results = []
     maps = []
+    indexMap = []
     for i in range(0,len(clusters)):
         clusterMat = []
         clusterMap = {}
+        indexProds = []
         for j in range(0, len(clusters[i])):
             clusterMat.append(transpose[p.productsMap[clusters[i][j]]])
             clusterMap[clusters[i][j]] = j
+            indexProds.append(clusters[i][j])
         mat = np.array(clusterMat).transpose()
         results.append(mat)
         maps.append(clusterMap)
-    return [results, maps]
+        indexMap.append(indexProds)
+    return [results, maps, indexMap]
 
 names = u.generateItems(500, u.alphabet)
 addCustomers()
@@ -56,22 +60,38 @@ prodClusters = cl.kMeans(catNum,8)
 inputs = subMatrices(prodClusters)
 subMats = inputs[0]
 maps = inputs[1]
+indexMap = inputs[2]
 subClusters = []
 silhouettes = []
 for i in range(0, len(subMats)):
     cl.__init__(subMats[i], c.customers, maps[i])
-    subClusters.append(cl.kMeans(25,8))
-    silhouettes.append(s.averageSilhouettes(subClusters[i], subMats[i]))
-    print silhouettes[i]
+    clust = []
+    clust.append(cl.kMeans(25,8))
+    clust.append(cl.centroidList)
+    clust.append(cl.clusterMap)
+    clust.append(indexMap[i])
+    clust.append(s.averageSilhouettes(clust[0], subMats[i]))
+    subClusters.append(clust)
+    print clust[4]
 
 cl.__init__(c.matrix, c.customers)
-clusters = cl.kMeans(25, 8)
+totCluster = []
+totCluster.append(cl.kMeans(25, 8))
+totCluster.append(cl.centroidList)
+totCluster.append(cl.clusterMap)
+totCluster.append(products)
+totCluster.append(s.averageSilhouettes(totCluster[0], c.matrix))
+
 powerClusters = []
 powerSil = []
-unfilteredSil = s.averageSilhouettes(clusters, c.matrix)
-print 'unfiltered results: ' + str(unfilteredSil)
-for i in range(0, len(silhouettes)):
-    if silhouettes[i] > unfilteredSil:
+print 'unfiltered results: ' + str(totCluster[4])
+for i in range(0, len(subClusters)):
+    if subClusters[i][4] > totCluster[4]:
         powerClusters.append(subClusters[i])
-        powerSil.append(silhouettes[i])
+        powerSil.append(subClusters[i][4])
+print 'clusts:' + str(len(powerSil))
 print 'filtered average: ' + str(sum(powerSil)/len(powerSil))
+
+powerClusters.append(totCluster)
+r.buildRecommendations(names, powerClusters)
+print str(names[0]) + ' should buy ' + str(r.recommender(names[0])) + '.'
