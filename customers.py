@@ -89,7 +89,6 @@ def nearestNeighbors(customer, num, customerMatrix):
                 
     return nearest
 
-
 def matrixBuilder():
     matr = []
     row = np.zeros(len(customers[0].purchasesArr))
