@@ -28,6 +28,7 @@ def init(data=False):
     if not data:
         mockData()
     c.matrixBuilder()
-    run.run(names)
+    recommend = run.run(names)
+    return recommend
 
 init()

@@ -62,7 +62,6 @@ def run(names):
         if subClusters[i][4] > totCluster[4]:
             powerClusters.append(subClusters[i])
             powerSil.append(subClusters[i][4])
-    print 'clusts:' + str(len(powerSil))
     print 'filtered average: ' + str(sum(powerSil)/len(powerSil))
 
     powerClusters.append(totCluster)
