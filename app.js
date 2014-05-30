@@ -49,8 +49,7 @@ if (app.get('env') === 'development') {
 app.get('/script', function(req, res){
   var python = require('child_process').spawn(
     'python',
-    // second argument is array of parameters, e.g.:
-  ["../pyscript/init.py"]);
+  ["./pyscript/init.py"]);
     var output = "";
     python.stdout.on('data', function(data){
       output += data;
