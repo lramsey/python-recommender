@@ -1,6 +1,8 @@
 import customers    as c
 import products     as p
 import util         as u
+import jsonpickle   as j
+import json
 import random
 import run
 
@@ -31,4 +33,4 @@ def init(data=False):
     recommend = run.run(names)
     return recommend
 
-init()
+print j.encode(init())

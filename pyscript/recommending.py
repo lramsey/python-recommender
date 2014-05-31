@@ -27,7 +27,6 @@ def buildRecommendations(names, clusters):
             recommendations = recommendations + clusterRecommender(names[i], history, clusters[j], j)
         recommendations.sort()
         recommendationMatrix.append(recommendations)
-    return recommendations
 
 def clusterRecommender(name, hist, cluster, index):
     clusterIndex  = cluster[2][name]

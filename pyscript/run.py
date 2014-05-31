@@ -8,16 +8,6 @@ import numpy        as np
 products = p.products
 names = []
 
-def createSubcluster(indexMap, subMatrix, aMap):
-    cl.__init__(subMatrix, c.customers, aMap)
-    clust = []
-    clust.append(cl.kMeans(25,8))
-    clust.append(cl.centroidList)
-    clust.append(cl.clusterMap)
-    clust.append(indexMap)
-    clust.append(s.averageSilhouettes(clust[0], subMatrix))
-    return clust
-
 def subMatrices(clusters):
     results = []
     maps = []
@@ -36,12 +26,25 @@ def subMatrices(clusters):
         indexMap.append(indexProds)
     return [results, maps, indexMap]
 
+def createSubcluster(indexMap, subMatrix, aMap):
+    cl.__init__(subMatrix, c.customers, aMap)
+    clust = []
+    clust.append(cl.kMeans(25,8))
+    clust.append(cl.centroidList)
+    clust.append(cl.clusterMap)
+    clust.append(indexMap)
+    clust.append(s.averageSilhouettes(clust[0], subMatrix))
+    return clust
+
 def run(names):
+    results = [names]
+
     global transpose
     transpose = c.matrix.transpose()
     cl.__init__(transpose, p.products)
     catNum = len(p.products)/8
     prodClusters = cl.kMeans(catNum,8)
+    results.append(prodClusters)
 
     inputs = subMatrices(prodClusters)
     subMats = inputs[0]
@@ -51,19 +54,22 @@ def run(names):
     for i in range(0, len(subMats)):
         subCluster = createSubcluster(indexMap[i], subMats[i], maps[i])
         subClusters.append(subCluster)
-        print subCluster[4]
-
+        # print subCluster[4]
+    # print subClusters[0][1]
     totCluster = createSubcluster(products, c.matrix, p.productsMap)
 
     powerClusters = []
     powerSil = []
-    print 'unfiltered results: ' + str(totCluster[4])
+    # print 'unfiltered results: ' + str(totCluster[4])
     for i in range(0, len(subClusters)):
         if subClusters[i][4] > totCluster[4]:
             powerClusters.append(subClusters[i])
             powerSil.append(subClusters[i][4])
-    print 'filtered average: ' + str(sum(powerSil)/len(powerSil))
+    # print 'filtered average: ' + str(sum(powerSil)/len(powerSil))
 
     powerClusters.append(totCluster)
+    results.append(powerClusters)
     r.buildRecommendations(names, powerClusters)
-    print str(names[0]) + ' should buy ' + str(r.recommender(names[0])) + '.'
+    results.append(r.recommendationMatrix)
+    return results
+    # print str(names[0]) + ' should buy ' + str(r.recommender(names[0])) + '.'

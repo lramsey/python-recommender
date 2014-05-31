@@ -50,10 +50,14 @@ app.get('/script', function(req, res){
   var python = require('child_process').spawn(
     'python',
   ["./pyscript/init.py"]);
-    var output = "";
+  output = '';
     python.stdout.on('data', function(data){
       output += data;
-      console.log(output);
+      console.log('goodbye');
+    });
+    python.stdout.on('close', function(){
+        console.log('hello');
+        console.log(JSON.parse(output));
     });
 });
 
