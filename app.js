@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes');
 var users = require('./routes/user');
+var script = require('./routes/script');
 
 var app = express();
 
@@ -20,11 +21,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
+app.use('/client', express.static(path.join(__dirname, 'client')));
 app.use(app.router);
 
 app.get('/', routes.index);
-app.get('/users', users.list);
+app.get('/script', script.datum);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
@@ -46,20 +48,6 @@ if (app.get('env') === 'development') {
     });
 }
 
-app.get('/script', function(req, res){
-  var python = require('child_process').spawn(
-    'python',
-  ["./pyscript/init.py"]);
-  output = '';
-    python.stdout.on('data', function(data){
-      output += data;
-      console.log('goodbye');
-    });
-    python.stdout.on('close', function(){
-        console.log('hello');
-        console.log(JSON.parse(output));
-    });
-});
 
 
 // production error handler

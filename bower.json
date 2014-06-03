@@ -1,0 +1,19 @@
+{
+  "name": "Luke Ramsey",
+  "version": "0.0.2",
+  "homepage": "https://github.com/lramsey/python-recommender",
+  "authors": [
+    "lramsey <lramsey177@gmail.com>"
+  ],
+  "description": "Angular Admin Dashboard for Python Recommendation Engine",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

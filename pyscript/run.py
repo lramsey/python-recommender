@@ -54,18 +54,16 @@ def run(names):
     for i in range(0, len(subMats)):
         subCluster = createSubcluster(indexMap[i], subMats[i], maps[i])
         subClusters.append(subCluster)
-        # print subCluster[4]
-    # print subClusters[0][1]
     totCluster = createSubcluster(products, c.matrix, p.productsMap)
 
     powerClusters = []
     powerSil = []
-    # print 'unfiltered results: ' + str(totCluster[4])
+    results.append('unfiltered results: ' + str(totCluster[4]))
     for i in range(0, len(subClusters)):
         if subClusters[i][4] > totCluster[4]:
             powerClusters.append(subClusters[i])
             powerSil.append(subClusters[i][4])
-    # print 'filtered average: ' + str(sum(powerSil)/len(powerSil))
+    results.append('filtered average: ' + str(sum(powerSil)/len(powerSil)))
 
     powerClusters.append(totCluster)
     results.append(powerClusters)

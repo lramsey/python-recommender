@@ -2,7 +2,6 @@ import customers    as c
 import products     as p
 import util         as u
 import jsonpickle   as j
-import json
 import random
 import run
 
