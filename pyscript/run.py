@@ -37,7 +37,7 @@ def createSubcluster(indexMap, subMatrix, aMap):
     return clust
 
 def run(names):
-    results = [names]
+    results = [names, c.customersMap]
 
     global transpose
     transpose = c.matrix.transpose()
@@ -70,4 +70,3 @@ def run(names):
     r.buildRecommendations(names, powerClusters)
     results.append(r.recommendationMatrix)
     return results
-    # print str(names[0]) + ' should buy ' + str(r.recommender(names[0])) + '.'

@@ -6,7 +6,11 @@
     <body ng-app='dashboard'>
         <h1>Admin Dashboard</h1>
         <div ng-controller='retrieveDatum'>
-            <button ng-click="fetchData()">Fetch Data</button>
+            <h1> {{ unfiltered }} </h1>
+            <h1> {{ filtered }} </h1>
+            <input type='text' ng-model='name'>
+            <h2>{{name}}</h2>
+            <button ng-click='recommender()'>Data</button>
         </div>
     </body> 
 </html>
