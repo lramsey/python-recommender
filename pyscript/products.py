@@ -7,10 +7,14 @@ import math
 productMatrix = {}
 productFreq = {}
 
-products = u.generateItems(50, u.symbols)
+products = []
 productsMap = {}
-for i in range(0, len(products)):
-    productsMap[products[i]] = i
+
+def addProducts(prods):
+    global products
+    products = prods
+    for i in range(0, len(prods)):
+        productsMap[prods[i]] = i
 
 def checkProducts(shoppers):
     sparseMatrix = sparse.csr_matrix(c.matrix)

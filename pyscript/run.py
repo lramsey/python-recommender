@@ -42,7 +42,7 @@ def run(names):
     global transpose
     transpose = c.matrix.transpose()
     cl.__init__(transpose, p.products)
-    catNum = len(p.products)/8
+    catNum = len(p.products)/8 + 1
     prodClusters = cl.kMeans(catNum,8)
     results.append(prodClusters)
 
@@ -55,12 +55,11 @@ def run(names):
         subCluster = createSubcluster(indexMap[i], subMats[i], maps[i])
         subClusters.append(subCluster)
     totCluster = createSubcluster(products, c.matrix, p.productsMap)
-
     powerClusters = []
     powerSil = []
     results.append('unfiltered results: ' + str(totCluster[4]))
     for i in range(0, len(subClusters)):
-        if subClusters[i][4] > totCluster[4]:
+        if subClusters[i][4] >= totCluster[4]:
             powerClusters.append(subClusters[i])
             powerSil.append(subClusters[i][4])
     results.append('filtered average: ' + str(sum(powerSil)/len(powerSil)))

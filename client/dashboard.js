@@ -11,6 +11,7 @@ app.controller('retrieveDatum', function($scope, $http){
     var recommendationMatrix;
     (function(){
         $http.get('/script').success(function(data){
+            console.log(data);
             customers = data[0];
             customersMap = data[1];
             productClusters = data[2];
@@ -23,16 +24,20 @@ app.controller('retrieveDatum', function($scope, $http){
 
     $scope.recommender = function(){
         if(customersMap && customersMap[$scope.name] !== undefined){
-            recommendation = recommendationMatrix[customersMap[$scope.name]].pop();
-            attraction = Object.keys(recommendation)[0];
-            indexes = recommendation[attraction];
-            cluster = powerClusters[indexes[1]];
-            indexMap = cluster[3];
-            product = indexMap[indexes[0]];
-            console.log(customers[0] + ' should buy ' + product + '.');
+            var customerRecs = recommendationMatrix[customersMap[$scope.name]];
+            if (customerRecs.length > 0){
+                var recommendation = recommendationMatrix[customersMap[$scope.name]].pop();
+                var attraction = Object.keys(recommendation)[0];
+                var indexes = recommendation[attraction];
+                var cluster = powerClusters[indexes[1]];
+                var indexMap = cluster[3];
+                var product = indexMap[indexes[0]];
+                console.log($scope.name + ' should buy ' + product + '.');
+            } else {
+                console.log('things are recommended');
+            }
         } else {
             console.log(customersMap);
-            console.log(customersMap[$scope.name]);
             console.log('That customer is not in our records.');
         }
     };

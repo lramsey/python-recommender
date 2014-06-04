@@ -5,6 +5,7 @@ import math
 
 customers = []
 customersMap = {}
+matrix = []
 
 class Customer(object):
     def __init__(self, name):
@@ -89,15 +90,18 @@ def nearestNeighbors(customer, num, customerMatrix):
                 
     return nearest
 
-def matrixBuilder():
-    matr = []
-    row = np.zeros(len(customers[0].purchasesArr))
-    for i in range(0, len(customers)):
-        for j in range(0, len(customers[i].purchasesArr)):
-            if customers[i].purchasesArr[j] > row[j]:
-                row[j] = customers[i].purchasesArr[j]
-        matr.append(customers[i].purchasesArr)
+def matrixBuilder(mat):
     global matrix
-    matrix = np.array(matr)
-    global maxRow
-    maxRow = row
+    if mat:
+        matrix = np.array(mat)
+    else:
+        matr = []
+        row = np.zeros(len(customers[0].purchasesArr))
+        for i in range(0, len(customers)):
+            for j in range(0, len(customers[i].purchasesArr)):
+                if customers[i].purchasesArr[j] > row[j]:
+                    row[j] = customers[i].purchasesArr[j]
+            matr.append(customers[i].purchasesArr)
+        matrix = np.array(matr)
+        global maxRow
+        maxRow = row
