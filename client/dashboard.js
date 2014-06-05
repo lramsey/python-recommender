@@ -15,6 +15,7 @@ app.controller('retrieveDatum', function($scope, $http){
             customers = data[0];
             customersMap = data[1];
             productClusters = data[2];
+            console.log(data[3]);
             $scope.unfiltered = data[3];
             $scope.filtered = data[4];
             powerClusters = data[5];
@@ -32,6 +33,7 @@ app.controller('retrieveDatum', function($scope, $http){
                 var cluster = powerClusters[indexes[1]];
                 var indexMap = cluster[3];
                 var product = indexMap[indexes[0]];
+                console.log(indexMap);
                 console.log($scope.name + ' should buy ' + product + '.');
             } else {
                 console.log('things are recommended');

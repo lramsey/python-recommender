@@ -5,8 +5,8 @@ import silhouette   as s
 import clustering   as cl
 import numpy        as np
 
-products = p.products
 names = []
+transpose = []
 
 def subMatrices(clusters):
     results = []
@@ -37,6 +37,7 @@ def createSubcluster(indexMap, subMatrix, aMap):
     return clust
 
 def run(names):
+    products = p.products
     results = [names, c.customersMap]
 
     global transpose
