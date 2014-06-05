@@ -50,7 +50,7 @@ def buildHistory(nameList, prodList, matrix):
     addCustomers()
     dataBuilder(matrix)
 
-def init(names=False, products=False, matrix=False):
+def init(names, products, matrix):
     if not names:
         names = mockData()
     else:

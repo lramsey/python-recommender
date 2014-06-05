@@ -1,8 +1,8 @@
 /* GET script page. */
 results = [];
-names =  "['bob', 'randy', 'steve']";
-products = "['starcraft', 'halflife', 'portal']";
-matrix = "[[1,1,1],[1,0,0],[0,1,1]]";
+names =  JSON.stringify(['bob','randy','steve']);
+products = JSON.stringify(['starcraft','halflife','portal']);
+matrix = JSON.stringify([[1,1,1],[1,0,0],[0,1,1]]);
 exports.datum = function(req, res){
   if(results.length === 0){
     var python = require('child_process').spawn(

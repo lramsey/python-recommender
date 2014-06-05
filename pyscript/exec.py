@@ -12,4 +12,6 @@ names = ast.literal_eval(args.names)
 products = ast.literal_eval(args.products)
 matrix = ast.literal_eval(args.matrix)
 
-print j.encode(i.init(names, products, matrix))
+results = i.init(names, products, matrix)
+results[2] = results[2].tolist()
+print j.encode(results)
