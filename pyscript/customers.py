@@ -90,18 +90,15 @@ def nearestNeighbors(customer, num, customerMatrix):
                 
     return nearest
 
-def matrixBuilder(mat):
+def matrixBuilder():
     global matrix
-    if mat:
-        matrix = np.array(mat)
-    else:
-        matr = []
+    matr = []
+    for i in range(0, len(customers)):
         row = np.zeros(len(customers[0].purchasesArr))
-        for i in range(0, len(customers)):
-            for j in range(0, len(customers[i].purchasesArr)):
-                if customers[i].purchasesArr[j] > row[j]:
-                    row[j] = customers[i].purchasesArr[j]
-            matr.append(customers[i].purchasesArr)
-        matrix = np.array(matr)
-        global maxRow
-        maxRow = row
+        for j in range(0, len(customers[i].purchasesArr)):
+            if customers[i].purchasesArr[j] > 0:
+                row[j] = 1
+        matr.append(row)
+    matrix = np.array(matr)
+    global maxRow
+    maxRow = row

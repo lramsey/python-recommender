@@ -8,7 +8,7 @@ products = []
 
 def addCustomers(names):
     for i in range(0, len(names)):
-        c.Customer(names[i])
+        c.Customer(names[i]) 
         c.customersMap[names[i]] = i
 
 def dataBuilder(matrix):
@@ -29,12 +29,13 @@ def buildHistory(nameList, prodList, matrix):
     dataBuilder(matrix)
 
 def init(names, products, matrix):
-    if not names:
-        names = m.mockData()
+    if isinstance(names, int):
+        names = m.mockData(names, products)
     else:
         '''expected data: list of customers, list of products, list customer arrays containing 
         product purchases in same order as product list.'''
         buildHistory(names, products, matrix);
-    c.matrixBuilder(matrix)
+    c.matrixBuilder()
+
     recommend = run.run(names)
     return recommend

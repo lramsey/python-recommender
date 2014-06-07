@@ -26,4 +26,4 @@ for l in range(0, len(results[5])):
     if not isinstance(results[2], float):
         results[5][l][4] = float(results[5][l][4])
 
-print j.encode(results)
+# print j.encode(results)

@@ -17,27 +17,18 @@ def __init__(mat, it,itmap=p.productsMap):
     global itemsMap
     itemsMap = itmap
 
-def centroidLowBuilder(num):
-    centroids = []
-    for j in range(0, num):
-        centroid = []
-        for i in range(0, len(c.maxRow)):
-            centroid.append(r.uniform(0,c.maxRow[i]))
-        centroids.append(centroid)
-    return np.array(centroids)
-
 def centroidBuilder(num):
     centroids = np.random.random((num, len(matrix[0])))
     return centroids
 
-def centerPoint(populus):
+def centerPoint(populus, mat=matrix):
     point = []
     if len(populus) != 0:
         if isinstance(populus[0], str):
             getPoint = productPoint
         else:
             getPoint = customerPoint
-        for i in range(0, len(matrix[0])):
+        for i in range(0, len(mat[0])):
             mag = 0.0
             for j in range(0, len(populus)):
                 mag += getPoint(populus, i, j)
@@ -94,7 +85,7 @@ def kMeans(num, end=5, centroids=np.array([0]), count=1):
     clusters = clusterizer(centroids, num)
     again = False
     if count == end:
-        return earlyEndCluster(clusters, centroids)
+        return endCluster(clusters, centroids)
 
     else:
         for i in range(0, len(clusters)):
@@ -105,18 +96,20 @@ def kMeans(num, end=5, centroids=np.array([0]), count=1):
                     again = True
     if again:
         clusters = kMeans(num, end, centroids, count+1)
-    elif not isinstance(clusters[0][0],str):
-        cleanupCluster(clusters, centroids)
+    else:
+        return endCluster(clusters, centroids)
     return clusters
 
-def earlyEndCluster(clusters, centroids):
+def endCluster(clusters, centroids):
     results = []
+    cents = []
     for i in range(0,len(clusters)):
         if len(clusters[i]) != 0:
             results.append(clusters[i])
+            cents.append(centroids[i])
     if not isinstance(results[0][0],str):
         cleanupCluster(results, centroids)
-    return results
+    return [results, cents]
 
 def cleanupCluster(clust, cent):
     global centroidList
