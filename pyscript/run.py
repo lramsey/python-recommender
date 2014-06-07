@@ -36,7 +36,13 @@ def dist(v1, v2):
     distance = np.sum(comb)**(1./2)
     return distance
 
-def merge(clusts, centroids, mats, i):
+def findCenter(points):
+    point = points[0]
+    for i in range(1,len(points)):
+        point += points[i]
+    return point/len(points + 0.)
+
+def merge(clusts, centroids, mats, maps, i):
     minDist = -1
     index = -1
     cent = centroids[i]
@@ -51,38 +57,50 @@ def merge(clusts, centroids, mats, i):
         clusts[index].append(clusts[i][j])
     
     newMat = []
-    redoMatrix(clusts, index, newMat)
+    newMap = {}
+    redoMatrix(clusts, index, newMat, newMap)
     mats[index] = np.array(newMat)
-    
-    newCent = cl.centerPoint(clusts[index], mats[index])
+    maps[index] = newMap
+    newCent = findCenter(mats[index])
     centroids[index] = newCent
-    centroids.pop(i)
     
-    clusts.remove(clusts[i])
+    maps.pop(i)
+    mats.pop(i)
+    centroids.pop(i)    
+    clusts.pop(i)
 
-def dissolve(clusts, centroids, mats, i):
-    print 'before: ' + str(len(clusts))
-    trans = np.array(mats[i]).transpose()
-    cl.__init__(trans, clusts[i])
+def dissolve(clusts, centroids, mats, maps, i):
+    trans = mats[i].transpose()
+    cl.__init__(trans, clusts[i], maps[i])
     num = len(clusts[i])/8+1
     print 'num: ' + str(num)
-    # goal: switch to k medoids, try
-    pClusts = cl.kMeans(num, 20)
-    # subs = subMatrices(pClusts)
-    # newClusts = rationalizeProdClusters(pClusts, subs[1], ceil)
-    clusts.remove(clusts[i])
-    print 'lll;: ' + str(len(pClusts))
+    results = cl.kMeans(num, 20)
+    pClusts = results[0]
+    pCents = results[1]
+    clusts.pop(i)
+    centroids.pop(i)
+    mats.pop(i)
+    maps.pop(i)
+
     for j in range(0, len(pClusts)):
         clusts.append(pClusts[j])
-    print 'after: ' + str(len(clusts))
+        centroids.append(pCents[j])
+        newMat = []
+        newMap = {}
+        redoMatrix(clusts,len(clusts)-1,newMat, newMap)
+        mats.append(newMat)
+        maps.append(newMap)
+
 # ceil is a float between 0 and 1, max percent of total group in variable
 # floor could be any natural number
-def rationalizeProdClusters(clusts, centroids, mats, floor, ceil):
+def rationalizeProdClusters(clusts, centroids, mats, maps, floor, ceil):
     displacement = 0
+    again = False
     for i in range(0,len(clusts)):
         length = len(clusts[i - displacement])
         if length < floor:
-            merge(clusts, centroids, mats, i - displacement)
+            again = True
+            merge(clusts, centroids, mats, maps, i - displacement)
             displacement += 1
     print 'done: ' + str(len(clusts))
     mats = subMatrices(clusts)[0]
@@ -93,12 +111,17 @@ def rationalizeProdClusters(clusts, centroids, mats, floor, ceil):
         t2 = len(clusts[i]) > 8
         print 'both: ' + str(t1 and t2)
         print 'hi: ' +str(len(clusts[i])/(0.0 + len(products)))
-
         if (t1 and t2):
-            dissolve(clusts, centroids, mats, i - displacement)
-        print 'by: ' +str(len(clusts[i])/(0.0 + len(products)))
+            again = True
+            dissolve(clusts, centroids, mats, maps, i - displacement)
+            displacement += 1
+    subs = subMatrices(clusts)
+    if(again):
+        print 'again'
+        clusts = rationalizeProdClusters(clusts, centroids, subs[0], subs[1], floor, ceil)
+    else:
+        print 'escaped'
     return clusts
-
 
 def createSubcluster(indexMap, subMatrix, aMap):
     cl.__init__(subMatrix, c.customers, aMap)
@@ -130,8 +153,8 @@ def run(names):
     maps = inputs[1]
     indexMap = inputs[2]
 
-    prodClusters = rationalizeProdClusters(prodClusters, centroids, subMats, 3, 0.2)
-
+    prodClusters = rationalizeProdClusters(prodClusters, centroids, subMats, maps, 3, 0.2)
+    return prodClusters
     subClusters = []
     for i in range(0, len(subMats)):
         subCluster = createSubcluster(indexMap[i], subMats[i], maps[i])

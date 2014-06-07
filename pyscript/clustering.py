@@ -17,18 +17,24 @@ def __init__(mat, it,itmap=p.productsMap):
     global itemsMap
     itemsMap = itmap
 
+# Initial centroids are points within data set. 
+# Future centroids are mean of cluster
 def centroidBuilder(num):
-    centroids = np.random.random((num, len(matrix[0])))
-    return centroids
+    centroids = []
+    indexes = range(len(matrix))
+    for i in range(0,num):
+        rand = r.randrange(len(indexes))
+        centroids.append(matrix[rand])
+    return np.array(centroids)
 
-def centerPoint(populus, mat=matrix):
+def centerPoint(populus):
     point = []
     if len(populus) != 0:
         if isinstance(populus[0], str):
             getPoint = productPoint
         else:
             getPoint = customerPoint
-        for i in range(0, len(mat[0])):
+        for i in range(0, len(matrix[0])):
             mag = 0.0
             for j in range(0, len(populus)):
                 mag += getPoint(populus, i, j)
