@@ -15,7 +15,6 @@ app.controller('retrieveDatum', function($scope, $http){
             customers = data[0];
             customersMap = data[1];
             productClusters = data[2];
-            console.log(data[3]);
             $scope.unfiltered = data[3];
             $scope.filtered = data[4];
             powerClusters = data[5];
