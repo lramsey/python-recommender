@@ -1,7 +1,6 @@
 import products  as p
 import numpy     as np
 import random    as r
-import customers as c
 
 matrix       = [[]]
 items        = []
@@ -120,6 +119,8 @@ def endCluster(clusters, centroids):
 def cleanupCluster(clust, cent):
     global centroidList
     centroidList = cent
+    global clusterMap
+    clusterMap = {}
     for i in range(0, len(clust)):
         for j in range(0,len(clust[i])):
             clusterMap[clust[i][j].name] = i

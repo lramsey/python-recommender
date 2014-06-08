@@ -30,7 +30,6 @@ def redoMatrix(clusters, i, clusterMat=[], clusterMap={}, indexProds=[]):
         clusterMap[clusters[i][j]] = j
         indexProds.append(clusters[i][j])
 
-
 def dist(v1, v2):
     comb = (v1 + v2)**2.
     distance = np.sum(comb)**(1./2)
@@ -73,8 +72,8 @@ def dissolve(clusts, centroids, mats, maps, i):
     trans = mats[i].transpose()
     cl.__init__(trans, clusts[i], maps[i])
     num = len(clusts[i])/8+1
-    print 'num: ' + str(num)
     results = cl.kMeans(num, 20)
+
     pClusts = results[0]
     pCents = results[1]
     clusts.pop(i)
@@ -102,32 +101,35 @@ def rationalizeProdClusters(clusts, centroids, mats, maps, floor, ceil):
             again = True
             merge(clusts, centroids, mats, maps, i - displacement)
             displacement += 1
-    print 'done: ' + str(len(clusts))
     mats = subMatrices(clusts)[0]
         
     displacement = 0
     for i in range(0,len(clusts)):
         t1 = len(clusts[i])/(0.0 + len(products)) > ceil
         t2 = len(clusts[i]) > 8
-        print 'both: ' + str(t1 and t2)
-        print 'hi: ' +str(len(clusts[i])/(0.0 + len(products)))
         if (t1 and t2):
             again = True
             dissolve(clusts, centroids, mats, maps, i - displacement)
             displacement += 1
     subs = subMatrices(clusts)
     if(again):
-        print 'again'
         clusts = rationalizeProdClusters(clusts, centroids, subs[0], subs[1], floor, ceil)
     else:
-        print 'escaped'
+        displacement = 0
+        for i in range(0,len(clusts)):
+            if not isinstance(clusts[i-displacement],list):
+                clusts.pop(i - displacement)
+                displacement += 1
     return clusts
 
 def createSubcluster(indexMap, subMatrix, aMap):
     cl.__init__(subMatrix, c.customers, aMap)
     clust = []
-    clust.append(cl.kMeans(25,8))
-    clust.append(cl.centroidList)
+    results = cl.kMeans(25,8)
+    clusters = results[0]
+    clust.append(clusters)
+    centroids = results[1]
+    clust.append(centroids)
     clust.append(cl.clusterMap)
     clust.append(indexMap)
     clust.append(s.averageSilhouettes(clust[0], subMatrix))
@@ -141,11 +143,13 @@ def run(names):
     global transpose
     transpose = c.matrix.transpose()
     cl.__init__(transpose, p.products)
-    catNum = len(p.products)/2 + 1
+    catNum = len(p.products)/8 + 1
     outputs = cl.kMeans(catNum,8)
     prodClusters = outputs[0]
     centroids = outputs[1]
 
+    inputs = subMatrices(prodClusters)
+    prodClusters = rationalizeProdClusters(prodClusters, centroids, inputs[0], inputs[1], 3, 0.2)
     results.append(prodClusters)
 
     inputs = subMatrices(prodClusters)
@@ -153,8 +157,6 @@ def run(names):
     maps = inputs[1]
     indexMap = inputs[2]
 
-    prodClusters = rationalizeProdClusters(prodClusters, centroids, subMats, maps, 3, 0.2)
-    return prodClusters
     subClusters = []
     for i in range(0, len(subMats)):
         subCluster = createSubcluster(indexMap[i], subMats[i], maps[i])
@@ -168,8 +170,9 @@ def run(names):
             powerClusters.append(subClusters[i])
             powerSil.append(subClusters[i][4])
     results.append('filtered average: ' + str(sum(powerSil)/len(powerSil)))
-
+    
     powerClusters.append(totCluster)
+
     results.append(powerClusters)
     r.buildRecommendations(names, powerClusters)
     results.append(r.recommendationMatrix)

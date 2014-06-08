@@ -30,9 +30,9 @@ def buildRecommendations(names, clusters):
 
 def clusterRecommender(name, hist, cluster, index):
     clusterIndex  = cluster[2][name]
-    centroid = cluster[1][clusterIndex]
-    silhouette = cluster[4]
-    results = findDiffs(hist, centroid, silhouette, index)
+    centroid      = cluster[1][clusterIndex]
+    silhouette    = cluster[4]
+    results       = findDiffs(hist, centroid, silhouette, index)
     return results
 
 def findDiffsArray(hist, avg, sil, distrib=[]):

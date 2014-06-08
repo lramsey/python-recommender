@@ -13,7 +13,6 @@ products = ast.literal_eval(args.products)
 matrix = ast.literal_eval(args.matrix)
 
 results = i.init(names, products, matrix)
-
 if not isinstance(results[2], list):
     results[2] = results[2].tolist()
 for l in range(0, len(results[5])):
