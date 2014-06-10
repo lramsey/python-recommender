@@ -53,6 +53,8 @@ def merge(clusts, centroids, mats, maps, i):
             minDist = distance
             index = j
     for j in range(0, len(clusts[i])):
+        if not isinstance(clusts[index],list):
+            clusts[index].tolist()
         clusts[index].append(clusts[i][j])
     
     newMat = []
@@ -62,7 +64,7 @@ def merge(clusts, centroids, mats, maps, i):
     maps[index] = newMap
     newCent = findCenter(mats[index])
     centroids[index] = newCent
-    
+
     maps.pop(i)
     mats.pop(i)
     centroids.pop(i)    
@@ -90,14 +92,14 @@ def dissolve(clusts, centroids, mats, maps, i):
         mats.append(newMat)
         maps.append(newMap)
 
-# ceil is a float between 0 and 1, max percent of total group in variable
-# floor could be any natural number
+# ceil is a float between 0 and 1, max percent of total population in group
+# floor is similar
 def rationalizeProdClusters(clusts, centroids, mats, maps, floor, ceil):
     displacement = 0
     again = False
     for i in range(0,len(clusts)):
-        length = len(clusts[i - displacement])
-        if length < floor:
+        ratio = len(clusts[i - displacement])/len(clusts)
+        if ratio < floor:
             again = True
             merge(clusts, centroids, mats, maps, i - displacement)
             displacement += 1
@@ -149,7 +151,7 @@ def run(names):
     centroids = outputs[1]
 
     inputs = subMatrices(prodClusters)
-    prodClusters = rationalizeProdClusters(prodClusters, centroids, inputs[0], inputs[1], 3, 0.2)
+    prodClusters = rationalizeProdClusters(prodClusters, centroids, inputs[0], inputs[1], 0.2, 0.4)
     results.append(prodClusters)
 
     inputs = subMatrices(prodClusters)
@@ -160,8 +162,12 @@ def run(names):
     subClusters = []
     for i in range(0, len(subMats)):
         subCluster = createSubcluster(indexMap[i], subMats[i], maps[i])
+        subCluster.append(r.buildRecommendations(names, [subCluster]))
         subClusters.append(subCluster)
+
+
     totCluster = createSubcluster(products, c.matrix, p.productsMap)
+    totCluster.append(r.buildRecommendations(names,[totCluster]))
     powerClusters = []
     powerSil = []
     results.append('unfiltered results: ' + str(totCluster[4]))
@@ -169,11 +175,16 @@ def run(names):
         if subClusters[i][4] >= totCluster[4]:
             powerClusters.append(subClusters[i])
             powerSil.append(subClusters[i][4])
-    results.append('filtered average: ' + str(sum(powerSil)/len(powerSil)))
+    if(len(powerSil) == 0):
+        return 'again'
+    else:
+        results.append('filtered average: ' + str(sum(powerSil)/len(powerSil)))
     
     powerClusters.append(totCluster)
 
+
+    recommendationMatrix = r.buildRecommendations(names, powerClusters)
+    results.append(recommendationMatrix)
+    results.append(subClusters)
     results.append(powerClusters)
-    r.buildRecommendations(names, powerClusters)
-    results.append(r.recommendationMatrix)
     return results

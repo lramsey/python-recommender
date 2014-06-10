@@ -1,8 +1,7 @@
 import math
-import numpy as np
 
 alphabet  = ['b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-symbols   = ['~','=','@','#','<','$','%','^','<','&','*','<','(',')','_','+','{','}','/','|']
+symbols   = ['~','=','@','#','<', '>','$','%','^','&','*','(',')','_','+','{','}','/','|']
 
 def reducer(num,arr, modulos=[]):
     modulos.append(num%len(arr))
@@ -37,3 +36,16 @@ def binarySearch(item, arr, low=0, high=-1):
         return binarySearch(item, arr,(low+high)/2, high)
     else:
         return (low+high)/2
+
+def dupCheck(clusters):
+    check = {}
+    for i in range(0,len(clusters)):
+        for j in range(0,len(clusters[i])):
+            res = check.get(clusters[i][j], [0,-1])
+            res[0] += 1
+            res[1] = i
+            check[clusters[i][j]] = res
+    prods = check.keys()
+    for i in range(0,len(prods)):
+        if(check[prods[i]][0] > 1):
+            print 'failure: ' + prods[i] + ' -- ' + str(check[prods[i]])

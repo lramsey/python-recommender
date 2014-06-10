@@ -15,14 +15,16 @@ matrix = ast.literal_eval(args.matrix)
 results = i.init(names, products, matrix)
 if not isinstance(results[2], list):
     results[2] = results[2].tolist()
-for l in range(0, len(results[5])):
-    if not isinstance(results[5][l][0], list):
-        results[5][l][0] = results[5][l][0].tolist()
-    if not isinstance(results[5][l][1], list):
-        results[5][l][1] = results[5][l][1].tolist()
-    for k in range(0, len(results[5][l][3])):
-        results[5][l][3][k] = str(results[5][l][3][k])
-    if not isinstance(results[2], float):
-        results[5][l][4] = float(results[5][l][4])
+for m in range(6,8):
+    for l in range(0, len(results[m])):
+        if not isinstance(results[m][l][0], list):
+            results[m][l][0] = results[m][l][0].tolist()
+        if not isinstance(results[m][l][1], list):
+            results[m][l][1] = results[m][l][1].tolist()
+        for k in range(0, len(results[m][l][3])):
+            results[m][l][3][k] = str(results[m][l][3][k])
+        if not isinstance(results[2], float):
+            results[m][l][4] = float(results[m][l][4])
 
+print results
 print j.encode(results)

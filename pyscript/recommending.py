@@ -17,16 +17,19 @@ def recommender(name):
         return product
 
 def buildRecommendations(names, clusters):
-    global goodClusters 
+    global recommendationMatrix
+    recommendationMatrix = []
+    global goodClusters
     goodClusters = clusters
     for i in range(0, len(names)):
         recommendations = []
-        target   = c.customers[c.customersMap[names[i]]]
+        target   = c.customers[i]
         history  = target.purchasesArr
         for j in range(0, len(clusters)):
             recommendations = recommendations + clusterRecommender(names[i], history, clusters[j], j)
         recommendations.sort()
         recommendationMatrix.append(recommendations)
+    return recommendationMatrix
 
 def clusterRecommender(name, hist, cluster, index):
     clusterIndex  = cluster[2][name]
@@ -35,15 +38,17 @@ def clusterRecommender(name, hist, cluster, index):
     results       = findDiffs(hist, centroid, silhouette, index)
     return results
 
-def findDiffsArray(hist, avg, sil, distrib=[]):
+def findDiffs(hist, avg, sil, index):
     normals = []
     for i in range(0,len(avg)):
         normalized = sil * math.fabs(hist[i]-avg[i])
-        normals.append({normalized: i})
+        print normalized
+        if normalized > 0:
+            normals.append({normalized: [i, index]})
     normals.sort()
     return normals
 
-def findDiffs(hist, avg, sil, index):
+def find3Diffs(hist, avg, sil, index):
     results = [{'0': [-1, index]},{'0': [-1, index]},{'0': [-1, index]}]
     for i in range(0,len(avg)):
         normalized = sil * math.fabs(hist[i]-avg[i])

@@ -38,4 +38,6 @@ def init(names, products, matrix):
     c.matrixBuilder()
 
     recommend = run.run(names)
+    while recommend == 'again':
+        recommend = run.run(names)
     return recommend
