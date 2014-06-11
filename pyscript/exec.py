@@ -26,5 +26,4 @@ for m in range(6,8):
         if not isinstance(results[2], float):
             results[m][l][4] = float(results[m][l][4])
 
-print results
 print j.encode(results)

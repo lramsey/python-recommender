@@ -42,7 +42,6 @@ def findDiffs(hist, avg, sil, index):
     normals = []
     for i in range(0,len(avg)):
         normalized = sil * math.fabs(hist[i]-avg[i])
-        print normalized
         if normalized > 0:
             normals.append({normalized: [i, index]})
     normals.sort()
