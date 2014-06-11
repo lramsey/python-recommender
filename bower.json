@@ -5,10 +5,10 @@
   "authors": [
     "lramsey <lramsey177@gmail.com>"
   ],
-  "description": "Angular Admin Dashboard for Python Recommendation Engine",
+  "description": "Python Recommendation Engine",
   "main": "index.html",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",

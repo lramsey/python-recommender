@@ -21,6 +21,10 @@ for m in range(6,8):
             results[m][l][0] = results[m][l][0].tolist()
         if not isinstance(results[m][l][1], list):
             results[m][l][1] = results[m][l][1].tolist()
+        else:
+            for n in range(0,len(results[m][l][1])):
+                if not isinstance(results[m][l][1][n], list):
+                    results[m][l][1][n] = results[m][l][1][n].tolist()
         for k in range(0, len(results[m][l][3])):
             results[m][l][3][k] = str(results[m][l][3][k])
         if not isinstance(results[2], float):

@@ -37,4 +37,5 @@ def createSubcluster(indexMap, subMatrix, aMap):
     clust.append(cl.clusterMap)
     clust.append(indexMap)
     clust.append(s.averageSilhouettes(clust[0], subMatrix))
+    clust.append(aMap)
     return clust

@@ -9,6 +9,7 @@ app.controller('retrieveDatum', function($scope, $http){
     var productClusters;
     var powerClusters;
     var recommendationMatrix;
+    var subClusters;
     (function(){
         $http.get('/script').success(function(data){
             console.log(data);
@@ -17,8 +18,9 @@ app.controller('retrieveDatum', function($scope, $http){
             productClusters = data[2];
             $scope.unfiltered = data[3];
             $scope.filtered = data[4];
-            powerClusters = data[5];
-            recommendationMatrix = data[6];
+            recommendationMatrix = data[5];
+            powerClusters = data[6];
+            subClusters = data[7];
         });
     })();
 
